@@ -10,7 +10,8 @@ import (
 
 func GetGames(c *gin.Context) {
 	var query struct {
-		PageIndex int `form:"index"`
+		PageIndex int `form:"page" binding:"required"`
+		PageSize  int `form:"pageSize" binding:"required"`
 	}
 	if err := c.BindQuery(&query); err != nil {
 		log.Infof("Failed to bind game query: %s", err.Error())
@@ -18,7 +19,7 @@ func GetGames(c *gin.Context) {
 		return
 	}
 
-	games, _, err := game_client.GetGames(query.PageIndex)
+	games, _, err := game_client.GetGames(query.PageIndex, query.PageSize)
 	if err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
