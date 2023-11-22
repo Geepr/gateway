@@ -19,8 +19,8 @@ func GetGame(id uuid.UUID) (game *GameDto, responseCode int, err error) {
 
 // GetGames returns games list as received from the game microservice.
 // The second return value is a response code received from the microservice, or -1 if the request didn't go that far.
-func GetGames(page int, size int) (games *GameResponseDto, responseCode int, err error) {
-	path := fmt.Sprintf("v0/games?page=%d&size=%d", page, size)
+func GetGames(page int, size int, title string) (games *GameResponseDto, responseCode int, err error) {
+	path := fmt.Sprintf("v0/games?page=%d&size=%d&title=%s", page, size, title)
 	return sendGetAndParseResponse[GameResponseDto](path)
 }
 
