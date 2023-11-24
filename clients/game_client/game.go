@@ -15,3 +15,9 @@ type GameDto struct {
 	Description *string   `json:"description"`
 	Archived    bool      `json:"archived"`
 }
+
+type GameUpdateDto struct {
+	Title       string  `json:"title" form:"title" binding:"required"`
+	Description *string `json:"description" form:"description"`
+	Archived    bool    `json:"archived" form:"archived"` //todo: binding:"required"`
+}
