@@ -40,6 +40,17 @@ func UpdateGame(id uuid.UUID, game *GameUpdateDto) (responseCode int, err error)
 	return response.StatusCode, nil
 }
 
+func DeleteGame(id uuid.UUID) (responseCode int, err error) {
+	path := fmt.Sprintf("v0/games/%s", id.String())
+	response, err := send(path, http.MethodDelete, nil)
+	if err != nil {
+		log.Warnf("Failed to delete game: %s", err.Error())
+		return -1, err
+	}
+	_ = response.Body.Close()
+	return response.StatusCode, nil
+}
+
 func send(requestPath string, method string, body io.Reader) (response *http.Response, err error) {
 	request, err := http.NewRequest(method, fmt.Sprintf("%s/api/%s", config.GameUrl, requestPath), body)
 	if err != nil {

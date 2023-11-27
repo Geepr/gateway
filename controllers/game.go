@@ -74,10 +74,31 @@ func UpdateGame(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+func DeleteGame(c *gin.Context) {
+	lookupUuid, err := parseUuidFromParam(c)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	responseCode, err := game_client.DeleteGame(lookupUuid)
+	if err != nil {
+		if responseCode == http.StatusNotFound {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.AbortWithStatus(http.StatusInternalServerError)
+		}
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
 func SetupGameRoutes(engine *gin.Engine, basePath string) {
 	baseUrl := fmt.Sprintf("%s/api/v0/games", basePath)
 
 	engine.GET(baseUrl+"/:id", GetGame)
 	engine.GET(baseUrl, GetGames)
 	engine.POST(baseUrl+"/:id", UpdateGame)
+	engine.DELETE(baseUrl+"/:id", DeleteGame)
 }
