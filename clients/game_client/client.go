@@ -40,6 +40,15 @@ func UpdateGame(id uuid.UUID, game *GameUpdateDto) (responseCode int, err error)
 	return response.StatusCode, nil
 }
 
+func CreateGame(game *GameCreateDto) (response *GameCreateResponseDto, responseCode int, err error) {
+	path := fmt.Sprintf("v0/games/")
+	gameJson, err := json.Marshal(game)
+	if err != nil {
+		return nil, -1, err
+	}
+	return sendAndParseResponse[GameCreateResponseDto](path, http.MethodPost, bytes.NewBuffer(gameJson))
+}
+
 func DeleteGame(id uuid.UUID) (responseCode int, err error) {
 	path := fmt.Sprintf("v0/games/%s", id.String())
 	response, err := send(path, http.MethodDelete, nil)
