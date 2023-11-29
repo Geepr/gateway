@@ -21,3 +21,12 @@ type GameUpdateDto struct {
 	Description *string `json:"description" form:"description"`
 	Archived    bool    `json:"archived" form:"archived"`
 }
+
+type GameCreateDto struct {
+	Title       string  `json:"title" form:"title" binding:"required,max=200"`
+	Description *string `json:"description" form:"description" binding:"max=2000"`
+}
+
+type GameCreateResponseDto struct {
+	Id uuid.UUID `json:"id"`
+}

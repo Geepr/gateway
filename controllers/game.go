@@ -94,11 +94,33 @@ func DeleteGame(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+func CreateGame(c *gin.Context) {
+	var createDto game_client.GameCreateDto
+	if err := c.BindJSON(&createDto); err != nil {
+		log.Infof("Failed to parse game create model: %s", err.Error())
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	responseBody, responseCode, err := game_client.CreateGame(&createDto)
+	if err != nil {
+		if responseCode == http.StatusNotFound {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.AbortWithStatus(http.StatusInternalServerError)
+		}
+		return
+	}
+
+	c.JSON(http.StatusCreated, responseBody)
+}
+
 func SetupGameRoutes(engine *gin.Engine, basePath string) {
 	baseUrl := fmt.Sprintf("%s/api/v0/games", basePath)
 
 	engine.GET(baseUrl+"/:id", GetGame)
 	engine.GET(baseUrl, GetGames)
 	engine.POST(baseUrl+"/:id", UpdateGame)
+	engine.POST(baseUrl, CreateGame)
 	engine.DELETE(baseUrl+"/:id", DeleteGame)
 }
