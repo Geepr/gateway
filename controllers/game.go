@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/Geepr/gateway/clients/game_client"
+	"github.com/Geepr/gateway/clients/game_client/dto"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -50,7 +51,7 @@ func GetGame(c *gin.Context) {
 }
 
 func UpdateGame(c *gin.Context) {
-	var updateDto game_client.GameUpdateDto
+	var updateDto dto.GameUpdateDto
 	if err := c.BindJSON(&updateDto); err != nil {
 		log.Infof("Failed to parse game update model: %s", err.Error())
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -95,7 +96,7 @@ func DeleteGame(c *gin.Context) {
 }
 
 func CreateGame(c *gin.Context) {
-	var createDto game_client.GameCreateDto
+	var createDto dto.GameCreateDto
 	if err := c.BindJSON(&createDto); err != nil {
 		log.Infof("Failed to parse game create model: %s", err.Error())
 		c.AbortWithStatus(http.StatusBadRequest)
