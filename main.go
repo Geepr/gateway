@@ -33,6 +33,7 @@ func setupEngine() *gin.Engine {
 	//todo: base path config
 	basePath := ""
 	controllers.SetupGameRoutes(router, basePath)
+	controllers.SetupPlatformRoutes(router, basePath)
 
 	return router
 }
