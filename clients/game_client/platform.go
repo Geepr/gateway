@@ -1,6 +1,8 @@
 package game_client
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/Geepr/gateway/clients/game_client/dto"
 	"github.com/gofrs/uuid"
@@ -19,4 +21,13 @@ func GetPlatform(id uuid.UUID) (platform *dto.PlatformDto, responseCode int, err
 func GetPlatforms(page int, size int, name string) (platforms *dto.PlatformResponseDto, responseCode int, err error) {
 	path := fmt.Sprintf("v0/platforms?page=%d&size=%d&name=%s", page, size, name)
 	return sendAndParseResponse[dto.PlatformResponseDto](path, http.MethodGet, nil)
+}
+
+func CreatePlatform(platform *dto.PlatformCreateDto) (response *dto.PlatformCreateResponseDto, responseCode int, err error) {
+	path := fmt.Sprintf("v0/platforms/")
+	platformJson, err := json.Marshal(platform)
+	if err != nil {
+		return nil, -1, err
+	}
+	return sendAndParseResponse[dto.PlatformCreateResponseDto](path, http.MethodPost, bytes.NewBuffer(platformJson))
 }

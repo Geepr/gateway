@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/Geepr/gateway/clients/game_client"
+	"github.com/Geepr/gateway/clients/game_client/dto"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -49,9 +50,33 @@ func GetPlatforms(c *gin.Context) {
 	c.JSON(http.StatusOK, platforms)
 }
 
+func CreatePlatform(c *gin.Context) {
+	var createDto dto.PlatformCreateDto
+	if err := c.BindJSON(&createDto); err != nil {
+		log.Infof("Failed to parse platform create model: %s", err.Error())
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	responseBody, responseCode, err := game_client.CreatePlatform(&createDto)
+	if err != nil {
+		if responseCode == http.StatusNotFound {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else if responseCode == http.StatusBadRequest {
+			c.AbortWithStatus(http.StatusBadRequest)
+		} else {
+			c.AbortWithStatus(http.StatusInternalServerError)
+		}
+		return
+	}
+
+	c.JSON(http.StatusCreated, responseBody)
+}
+
 func SetupPlatformRoutes(engine *gin.Engine, basePath string) {
 	baseUrl := fmt.Sprintf("%s/api/v0/platforms", basePath)
 
 	engine.GET(baseUrl+"/:id", GetPlatform)
 	engine.GET(baseUrl, GetPlatforms)
+	engine.POST(baseUrl, CreatePlatform)
 }
