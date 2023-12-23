@@ -14,3 +14,17 @@ type PlatformResponseDto struct {
 	PageSize   int            `json:"pageSize"`
 	TotalPages int            `json:"totalPages"`
 }
+
+type PlatformUpdateDto struct {
+	Name      string `json:"name" form:"name" binding:"required,max=200"`
+	ShortName string `json:"shortName" form:"shortName" binding:"required,max=10"`
+}
+
+type PlatformCreateDto struct {
+	Name      string `json:"name" form:"name" binding:"required,max=200"`
+	ShortName string `json:"shortName" form:"shortName" binding:"required,max=10"`
+}
+
+type PlatformCreateResponseDto struct {
+	Id uuid.UUID `json:"id"`
+}

@@ -8,6 +8,26 @@ import (
 	"net/http"
 )
 
+func GetPlatform(c *gin.Context) {
+	lookupUuid, err := parseUuidFromParam(c)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	game, responseCode, err := game_client.GetPlatform(lookupUuid)
+	if err != nil {
+		if responseCode == http.StatusNotFound {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.AbortWithStatus(http.StatusInternalServerError)
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, game)
+}
+
 func GetPlatforms(c *gin.Context) {
 	var query struct {
 		PageIndex int    `form:"page" binding:"required"`
@@ -32,5 +52,6 @@ func GetPlatforms(c *gin.Context) {
 func SetupPlatformRoutes(engine *gin.Engine, basePath string) {
 	baseUrl := fmt.Sprintf("%s/api/v0/platforms", basePath)
 
+	engine.GET(baseUrl+"/:id", GetPlatform)
 	engine.GET(baseUrl, GetPlatforms)
 }

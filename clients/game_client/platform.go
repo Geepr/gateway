@@ -3,8 +3,16 @@ package game_client
 import (
 	"fmt"
 	"github.com/Geepr/gateway/clients/game_client/dto"
+	"github.com/gofrs/uuid"
 	"net/http"
 )
+
+// GetPlatform returns a platform as received from the game microservice.
+// The second return value is a response code received from the microservice, or -1 if the request didn't go that far.
+func GetPlatform(id uuid.UUID) (platform *dto.PlatformDto, responseCode int, err error) {
+	path := fmt.Sprintf("v0/platforms/%s", id.String())
+	return sendAndParseResponse[dto.PlatformDto](path, http.MethodGet, nil)
+}
 
 // GetPlatforms returns platforms list as received from the game microservice.
 // The second return value is a response code received from the microservice, or -1 if the request didn't go that far.
