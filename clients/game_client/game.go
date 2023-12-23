@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/Geepr/gateway/clients/client_utils"
 	"github.com/Geepr/gateway/clients/game_client/dto"
 	"github.com/Geepr/gateway/config"
 	"github.com/gofrs/uuid"
@@ -80,6 +81,9 @@ func sendAndParseResponse[T any](requestPath string, method string, body io.Read
 	response, err := send(requestPath, method, body)
 	if err != nil {
 		return nil, -1, err
+	}
+	if response.StatusCode < 200 || response.StatusCode > 299 {
+		return nil, response.StatusCode, client_utils.UnexpectedResponseCode
 	}
 	data, err := io.ReadAll(response.Body)
 	if err != nil {
