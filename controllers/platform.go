@@ -73,10 +73,39 @@ func CreatePlatform(c *gin.Context) {
 	c.JSON(http.StatusCreated, responseBody)
 }
 
+func UpdatePlatform(c *gin.Context) {
+	var updateDto dto.PlatformUpdateDto
+	if err := c.BindJSON(&updateDto); err != nil {
+		log.Infof("Failed to parse platform update model: %s", err.Error())
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	id, err := parseUuidFromParam(c)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	responseBody, responseCode, err := game_client.UpdatePlatform(&updateDto, id)
+	if err != nil {
+		if responseCode == http.StatusNotFound {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else if responseCode == http.StatusBadRequest {
+			c.AbortWithStatus(http.StatusBadRequest)
+		} else {
+			c.AbortWithStatus(http.StatusInternalServerError)
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, responseBody)
+}
+
 func SetupPlatformRoutes(engine *gin.Engine, basePath string) {
 	baseUrl := fmt.Sprintf("%s/api/v0/platforms", basePath)
 
 	engine.GET(baseUrl+"/:id", GetPlatform)
 	engine.GET(baseUrl, GetPlatforms)
 	engine.POST(baseUrl, CreatePlatform)
+	engine.POST(baseUrl+"/:id", UpdatePlatform)
 }

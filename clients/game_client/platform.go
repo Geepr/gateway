@@ -31,3 +31,12 @@ func CreatePlatform(platform *dto.PlatformCreateDto) (response *dto.PlatformCrea
 	}
 	return sendAndParseResponse[dto.PlatformCreateResponseDto](path, http.MethodPost, bytes.NewBuffer(platformJson))
 }
+
+func UpdatePlatform(platform *dto.PlatformUpdateDto, platformId uuid.UUID) (response *dto.PlatformDto, responseCode int, err error) {
+	path := fmt.Sprintf("v0/platforms/%s", platformId.String())
+	platformJson, err := json.Marshal(platform)
+	if err != nil {
+		return nil, -1, err
+	}
+	return sendAndParseResponse[dto.PlatformDto](path, http.MethodPut, bytes.NewBuffer(platformJson))
+}
