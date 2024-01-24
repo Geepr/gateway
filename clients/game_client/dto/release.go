@@ -13,27 +13,30 @@ type ReleaseResponseDto struct {
 }
 
 type ReleaseDto struct {
-	Id                 uuid.UUID  `json:"id"`
-	GameId             uuid.UUID  `json:"gameId"`
-	TitleOverride      *string    `json:"titleOverride"`
-	Description        *string    `json:"description"`
-	ReleaseDate        *time.Time `json:"releaseDate"`
-	ReleaseDateUnknown bool       `json:"releaseDateUnknown"`
+	Id                 uuid.UUID   `json:"id"`
+	GameId             uuid.UUID   `json:"gameId"`
+	TitleOverride      *string     `json:"titleOverride"`
+	Description        *string     `json:"description"`
+	ReleaseDate        *time.Time  `json:"releaseDate"`
+	ReleaseDateUnknown bool        `json:"releaseDateUnknown"`
+	PlatformIds        []uuid.UUID `json:"platformIds"`
 }
 
 type ReleaseUpdateDto struct {
-	TitleOverride      *string    `json:"titleOverride"`
-	Description        *string    `json:"description"`
-	ReleaseDate        *time.Time `json:"releaseDate"`
-	ReleaseDateUnknown bool       `json:"releaseDateUnknown"`
+	TitleOverride      *string     `json:"titleOverride"`
+	Description        *string     `json:"description"`
+	ReleaseDate        *time.Time  `json:"releaseDate"`
+	ReleaseDateUnknown bool        `json:"releaseDateUnknown"`
+	PlatformIds        []uuid.UUID `json:"platformIds"`
 }
 
 type ReleaseCreateDto struct {
-	GameId             uuid.UUID  `json:"gameId"`
-	TitleOverride      *string    `json:"titleOverride"`
-	Description        *string    `json:"description"`
-	ReleaseDate        *time.Time `json:"releaseDate"`
-	ReleaseDateUnknown bool       `json:"releaseDateUnknown"`
+	GameId             uuid.UUID   `json:"gameId"`
+	TitleOverride      *string     `json:"titleOverride"`
+	Description        *string     `json:"description"`
+	ReleaseDate        *time.Time  `json:"releaseDate"`
+	ReleaseDateUnknown bool        `json:"releaseDateUnknown"`
+	PlatformIds        []uuid.UUID `json:"platformIds"`
 }
 
 type ReleaseCreateResponseDto struct {
